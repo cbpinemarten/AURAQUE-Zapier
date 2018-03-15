@@ -33,7 +33,7 @@ const listOrders = (z, bundle) => {
    return z.request(requestOptions)
           .then((response) => {
             const raw_respponse = z.JSON.parse(response.content);
-            return raw_response.mvSalesOrders
+            return raw_response.mvSalesOrders;
           });
           
 };
