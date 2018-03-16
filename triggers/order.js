@@ -31,7 +31,10 @@ const listOrders = (z, bundle) => {
   // You may return a promise or a normal data structure from any perform method.
 
    return z.request(requestOptions)
-          .then((response) => z.JSON.parse(response.content));
+          .then((response) => {
+            const raw_respponse = z.JSON.parse(response.content);
+            return raw_response.mvSalesOrders;
+          });
           
 };
 
