@@ -17,10 +17,10 @@ const listOrders = (z, bundle) => {
     },
     body: JSON.stringify({
       "APIKEY": "40eb126f1e001a75@m73276",
-      "mvSalesOrderStatus": "Cancelled"
+      "mvSalesOrderStatus": bundle.inputData.status
     })
   };
-
+ z.console.log(bundle.inputData.status);
 //  let items = z.JSON.parse(response.content).items;
 
   //let item = items.mvSalesOrders[1];
@@ -31,8 +31,15 @@ const listOrders = (z, bundle) => {
   // You may return a promise or a normal data structure from any perform method.
 
    return z.request(requestOptions)
-          .then((response) => z.JSON.parse(response.content));
-          
+          .then((response) => {
+            const raw_response = z.JSON.parse(response.content);
+            let items = raw_response.mvSalesOrders;
+            items.forEach(item => {
+              item.id = item.SalesOrderId + ',' + item.SalesOrderStatus;
+            })
+            return raw_response.mvSalesOrders;
+          });
+
 };
 
 // We recommend writing your triggers separate like this and rolling them
@@ -55,7 +62,7 @@ module.exports = {
     // we'll pass them in as `bundle.inputData` later.
     inputFields: [
       {key: 'status',
-      choices: {'pending': 'pending', 'dispatched': 'dispatched', 'cancelled':'cancelled' },
+      choices: ['Pending', 'Verified', 'FullyShipped', 'FullyInvoiced','Closed', 'Cancelled' ],
       helpText: 'Which order status this should trigger on.'}
     ],
 
